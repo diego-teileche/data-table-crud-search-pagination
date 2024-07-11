@@ -50,7 +50,17 @@ const DataTable = () => {
 						</tr>
 					</thead>
 
-					<tbody></tbody>
+					<tbody>
+						<tr>
+							<td>Diego</td>
+							<td>Male</td>
+							<td>26</td>
+							<td className="actions">
+								<button className="edit">Edit</button>
+								<button className="delete">Delete</button>
+							</td>
+						</tr>
+					</tbody>
 				</table>
 
 				<div className="pagination"></div>
