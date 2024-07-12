@@ -29,11 +29,15 @@ const DataTable = () => {
 	const lastItem = currentPage * itemsPerPage
 	const indexOfFirstItem = lastItem - itemsPerPage
 
-	const filteredData = data
-		.filter((item) =>
-			item.name.toLowerCase().includes(searchTerm.toLowerCase())
-		)
-		.slice(indexOfFirstItem, lastItem)
+	let filteredItems = data.filter((item) =>
+		item.name.toLowerCase().includes(searchTerm.toLowerCase())
+	)
+
+	const filteredData = filteredItems.slice(indexOfFirstItem, lastItem)
+
+	useEffect(() => {
+		setCurrentPage(1)
+	}, [searchTerm])
 
 	useEffect(() => {
 		if (!editId) return
@@ -78,6 +82,9 @@ const DataTable = () => {
 	}
 
 	const handleDelete = (id: number) => {
+		if (filteredData.length === 1 && currentPage !== 1)
+			setCurrentPage((prev) => prev - 1)
+
 		const updatedList = data.filter((item) => item.id !== id)
 
 		setData(updatedList)
@@ -204,7 +211,7 @@ const DataTable = () => {
 
 				<div className="pagination">
 					{Array.from(
-						{ length: Math.ceil(data.length / itemsPerPage) },
+						{ length: Math.ceil(filteredItems.length / itemsPerPage) },
 						(_, index) => (
 							<button
 								key={index + 1}

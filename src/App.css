@@ -133,6 +133,12 @@ table th {
   background-color: #e34;
 }
 
+.pagination {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
+
 @media only screen and (max-width: 600px) {
   tr th {
     min-width: unset;
