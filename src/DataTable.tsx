@@ -21,7 +21,12 @@ const DataTable = () => {
 	})
 	const [data, setData] = useState<dataProps[]>([])
 	const [editId, setEditId] = useState<number | boolean>(false)
+	const [searchTerm, setSearchTerm] = useState("")
 	const outsideClick = useRef(false)
+
+	const filteredData = data.filter((item) =>
+		item.name.toLowerCase().includes(searchTerm.toLowerCase())
+	)
 
 	useEffect(() => {
 		if (!editId) return
@@ -81,6 +86,10 @@ const DataTable = () => {
 		setData(updatedList)
 	}
 
+	const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setSearchTerm(e.target.value)
+	}
+
 	return (
 		<div className="container">
 			<div className="add-container">
@@ -119,8 +128,8 @@ const DataTable = () => {
 				<input
 					type="text"
 					placeholder="Search by Name"
-					value={""}
-					onChange={() => {}}
+					value={searchTerm}
+					onChange={handleSearch}
 					className="search-input"
 				/>
 
@@ -137,7 +146,7 @@ const DataTable = () => {
 					</thead>
 
 					<tbody>
-						{data.map((item) => (
+						{filteredData.map((item) => (
 							<tr key={item.id}>
 								<td
 									id={item.id.toString()}
