@@ -21,12 +21,19 @@ const DataTable = () => {
 	})
 	const [data, setData] = useState<dataProps[]>([])
 	const [editId, setEditId] = useState<number | boolean>(false)
-	const [searchTerm, setSearchTerm] = useState("")
-	const outsideClick = useRef(false)
+	const [searchTerm, setSearchTerm] = useState<string>("")
+	const [currentPage, setCurrentPage] = useState<number>(1)
+	const outsideClick = useRef<any>(false)
 
-	const filteredData = data.filter((item) =>
-		item.name.toLowerCase().includes(searchTerm.toLowerCase())
-	)
+	const itemsPerPage = 5
+	const lastItem = currentPage * itemsPerPage
+	const indexOfFirstItem = lastItem - itemsPerPage
+
+	const filteredData = data
+		.filter((item) =>
+			item.name.toLowerCase().includes(searchTerm.toLowerCase())
+		)
+		.slice(indexOfFirstItem, lastItem)
 
 	useEffect(() => {
 		if (!editId) return
@@ -39,7 +46,6 @@ const DataTable = () => {
 
 	useEffect(() => {
 		const handleClickOutside = (e: React.ChangeEvent) => {
-			// @ts-ignore
 			if (outsideClick.current && !outsideClick.current.contains(e.target))
 				setEditId(false)
 		}
@@ -89,6 +95,8 @@ const DataTable = () => {
 	const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setSearchTerm(e.target.value)
 	}
+
+	const paginate = (pageNumber: number) => setCurrentPage(pageNumber)
 
 	return (
 		<div className="container">
@@ -194,7 +202,24 @@ const DataTable = () => {
 					</tbody>
 				</table>
 
-				<div className="pagination"></div>
+				<div className="pagination">
+					{Array.from(
+						{ length: Math.ceil(data.length / itemsPerPage) },
+						(_, index) => (
+							<button
+								key={index + 1}
+								onClick={() => paginate(index + 1)}
+								style={{
+									backgroundColor:
+										currentPage === index + 1 ? "#04aa6d" : undefined,
+									color: currentPage === index + 1 ? "#f0f0f0" : undefined,
+								}}
+							>
+								{index + 1}
+							</button>
+						)
+					)}
+				</div>
 			</div>
 		</div>
 	)
